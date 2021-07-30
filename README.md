@@ -12,5 +12,5 @@ graph TD
 using extension: https://chrome.google.com/webstore/detail/github-%20-mermaid/goiiopgdnkogdbjmncgedmgpoajilohe
 ```mermaid
 graph TD;
-    Start --> Stop;
+    Start with some text --> Stop with some text;
 ```
