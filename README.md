@@ -15,6 +15,6 @@ graph TB;
     Start[Starting Point];
     Stop[Stopping Point];
     MidPt[Middle Point];
-    Start --> MidPt;
+    Start --some companion<br>text--> MidPt;
     MidPt --> Stop;
 ```
