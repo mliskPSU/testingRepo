@@ -11,8 +11,9 @@ graph TD
 
 using extension: https://chrome.google.com/webstore/detail/github-%20-mermaid/goiiopgdnkogdbjmncgedmgpoajilohe
 ```mermaid
-graph LR;
+graph TB;
     Start[Starting Point];
     Stop[Stopping Point];
-    Start --> Stop;
+    MidPt[Middle Point];
+    Start --> MidPt --> Stop;
 ```
