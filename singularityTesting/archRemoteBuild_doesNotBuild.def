@@ -1,0 +1,11 @@
+Bootstrap: arch
+
+%post
+  # Set locale. Use whatever you prefer instead of en_US.
+  echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
+
+%test
+  echo "I have arrived!"
+
+%runscript
+  echo "Just dance!"

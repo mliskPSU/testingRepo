@@ -1,0 +1,27 @@
+
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%environment
+    SINGULARITYENV_PS1='\n\[\033[01;33m\][`basename ${SINGULARITY_CONTAINER} .simg`]\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \$ '
+
+%runscript
+    exec /bin/bash "$@"
+
+
+%post
+    # fix package sources
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial main restricted universe multiverse" > /etc/apt/sources.list
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial-updates main restricted universe multiverse" >> /etc/apt/sources.list
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial-security main restricted universe multiverse" >> /etc/apt/sources.list
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial-backports main restricted universe multiverse" >> /etc/apt/sources.list
+
+    # upgrade packages in base image
+    DEBIAN_FRONTEND=noninteractive apt-get update && apt-get -y dist-upgrade
+    DEBIAN_FRONTEND=noninteractive apt-get -y install mc htop joe wget less r-base-core libgdal-dev libgeos++-dev libudunits2-dev libproj-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev libfreetype6-dev libxt-dev libfftw3-dev
+    DEBIAN_FRONTEND=noninteractive apt-get -y autoremove
+
+    # Install R packages and dependencies
+    R -e "install.packages('rgdal', dependencies=T, repos=c('https://cloud.r-project.org'))"
+    R -e "install.packages('raster', dependencies=T, repos=c('https://cloud.r-project.org'))"

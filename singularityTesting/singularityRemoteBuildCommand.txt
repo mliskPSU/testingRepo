@@ -1,0 +1,3 @@
+singularity remote build command - currently having an issue where copying files with %files not working
+
+$ singularity build --remote XYZ.sif XYZ.def

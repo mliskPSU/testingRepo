@@ -1,0 +1,49 @@
+# Last modified 26 October 2020 by Robert Nicholas <ren10@psu.edu>.
+
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%environment
+    PATH=/opt/miniconda/bin:$PATH
+    SINGULARITYENV_PS1='\n\[\033[01;33m\][`basename ${SINGULARITY_CONTAINER} .simg`]\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \$ '
+
+%runscript
+
+    exec /bin/bash "$@"
+
+
+%post
+
+    # fix package sources
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial main restricted universe multiverse" > /etc/apt/sources.list
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial-updates main restricted universe multiverse" >> /etc/apt/sources.list
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial-security main restricted universe multiverse" >> /etc/apt/sources.list
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial-backports main restricted universe multiverse" >> /etc/apt/sources.list
+
+    # upgrade packages in base image
+    DEBIAN_FRONTEND=noninteractive apt-get update && apt-get -y dist-upgrade
+    DEBIAN_FRONTEND=noninteractive apt-get -y install mc htop joe wget less
+    DEBIAN_FRONTEND=noninteractive apt-get -y autoremove
+
+    # create a few ACI-specific directories within the container
+    mkdir -p /storage/home
+    mkdir -p /storage/work
+    mkdir -p /gpfs/group
+    mkdir -p /gpfs/scratch
+    mkdir -p /var/spool/torque
+
+    # set the locale
+    locale-gen en_US.UTF-8
+    update-locale LANG=en_US.UTF-8
+
+    # install MiniConda
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda
+    rm Miniconda3-latest-Linux-x86_64.sh
+    export PATH=/opt/miniconda/bin:$PATH
+    conda update --yes conda
+    conda config --add channels conda-forge
+    conda config --set channel_priority strict
+    conda update --yes --all
+    conda install --yes r-base r-ncdf4 r-rgdal r-scales r-ggplot2 r-rmpi r-doparallel r-foreach r-raster r-plyr r-vegan r-plotrix r-stringr r-dplyr mpi4py numpy pandas 

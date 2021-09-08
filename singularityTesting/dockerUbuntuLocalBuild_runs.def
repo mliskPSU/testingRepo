@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%post
+  export DEBIAN_FRONTEND="noninteractive"
+  export DEBCONF_NONINTERACTIVE_SEEN=true
+
+  # Update apt
+  apt-get update
+  
+  # Install necessary libraries
+  apt-get install -y build-essential r-base-core software-properties-common dirmngr apt-transport-https lsb-release ca-certificates
+
+  add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+  
+  apt install -y libgdal-dev libgeos++-dev libudunits2-dev libproj-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev libfreetype6-dev libnode-dev libxt-dev libfftw3-dev
+    
+  apt clean
+  
+  # Install R packages and dependencies
+  R -e "install.packages('rgdal', dependencies=T)"
+  R -e "install.packages('raster', dependencies=T)"
+  
+  # custom directory within the container
+  mkdir -p /storage/customFiles
+
+# adding files to the container
+%files
+  /home/mdl5548/Documents/containerBuilding/testPlotScript.R /storage/customFiles/
+
+# runscript
+%runscript
+  #!/bin/sh
+  Rscript /storage/customFiles/testPlotScript.R
+  
