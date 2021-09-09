@@ -1,0 +1,29 @@
+
+BootStrap: library
+From: alpine:3.11
+
+%environment
+#    SINGULARITYENV_PS1='\n\[\033[01;33m\][`basename ${SINGULARITY_CONTAINER} .simg`]\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \$ '
+
+%runscript
+    exec /bin/bash "$@"
+
+
+%post
+    # upgrade packages in base image
+    apk update
+    apk add -q --no-progress --no-cache libstdc++ libcurl curl-dev openssl-dev libgit2-dev fontconfig-dev freetype-dev harfbuzz-dev fribidi-dev mesa-dev libpng-dev tiff-dev jpeg-dev alpine-sdk libxslt-dev ca-certificates wget automake autoconf build-base m4 file g++ gcc libxt-dev libxml2-dev cmake git cairo-dev libffi psmisc rrdtool linux-headers
+
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk
+    apk add glibc-2.34-r0.apk
+
+    apk add gdal R R-dev
+
+    # Install R packages and dependencies
+#    R -e "update.packages(ask=F, repos=c('https://cloud.r-project.org','http://cran.rstudio.com'))"
+#    R -e "install.packages('https://cran.r-project.org/src/contrib/Archive/rlang/rlang_0.4.9.tar.gz', repo=NULL, type='source')"
+    R -e "install.packages('rlang', dependencies=T, repos=c('https://cloud.r-project.org','http://cran.rstudio.com'))"
+#    R -e "install.packages('devtools', dependencies=T, repos=c('https://cloud.r-project.org','http://cran.rstudio.com'))"
+#    R -e "install.packages('rgdal', dependencies=T, repos=c('https://cloud.r-project.org','http://cran.rstudio.com'))"
+#    R -e "install.packages('raster', dependencies=T, repos=c('https://cloud.r-project.org','http://cran.rstudio.com'))"
