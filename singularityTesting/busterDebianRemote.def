@@ -8,6 +8,19 @@ From: debian:10
     SINGULARITYENV_PS1='\n\[\033[01;33m\][`basename ${SINGULARITY_CONTAINER} .simg`]\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \$ '
 
 
+%files
+#    testPlotScript.R /storage/customFiles
+#    /testPlotScript.R /storage/customFiles
+#    ./testPlotScript.R
+#    scripts/testPlotScript.R
+#    /scripts/testPlotScript.R
+#    ./scripts/testPlotScript.R
+#    root/scripts/testPlotScript.R
+#    /root/scripts/testPlotScript.R
+#    ./root/scripts/testPlotScript.R
+    containers/scripts/testPlotScript.R
+
+
 %post
     # fix package sources
     echo "deb http://ftp.debian.org/debian buster main contrib non-free" > /etc/apt/sources.list
@@ -19,25 +32,20 @@ From: debian:10
     DEBIAN_FRONTEND=noninteractive apt-get update && apt-get -y dist-upgrade
 
     # install additional packages
-    DEBIAN_FRONTEND=noninteractive apt-get -y install vim joe mc wget htop
-    DEBIAN_FRONTEND=noninteractive apt-get -y install hugo pandoc pandoc-citeproc texlive-latex-recommended
-#    DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential gfortran r-base python3-scipy
-    DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential r-base r-base-dev software-properties-common dirmngr apt-transport-https lsb-release ca-certificates
-    DEBIAN_FRONTEND=noninteractive apt-get -y install libgdal-dev libgeos++-dev libudunits2-dev libproj-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev libfreetype6-dev libnode-dev libxt-dev libfftw3-dev
-#    DEBIAN_FRONTEND=noninteractive apt-get -y install cdo nco ncl-ncarg
+#    DEBIAN_FRONTEND=noninteractive apt-get -y install vim joe mc wget htop
+#    DEBIAN_FRONTEND=noninteractive apt-get -y install hugo pandoc pandoc-citeproc texlive-latex-recommended
+##    DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential gfortran r-base python3-scipy
+#    DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential r-base r-base-dev software-properties-common dirmngr apt-transport-https lsb-release ca-certificates
+#    DEBIAN_FRONTEND=noninteractive apt-get -y install libgdal-dev libgeos++-dev libudunits2-dev libproj-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev libfreetype6-dev libnode-dev libxt-dev libfftw3-dev
+##    DEBIAN_FRONTEND=noninteractive apt-get -y install cdo nco ncl-ncarg
 
     # clean up orphaned packages and delete installed .deb files
     DEBIAN_FRONTEND=noninteractive apt-get -y autoremove
     DEBIAN_FRONTEND=noninteractive apt-get -y clean
 
-    # install newish Julia
-#    JULIA_URL=https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.3-linux-x86_64.tar.gz
-#    wget $JULIA_URL && tar --strip-components=1 -zxvf `basename $JULIA_URL` -C /usr/local/
-#    rm `basename $JULIA_URL` /usr/local/LICENSE.md
-
     # install some R packages
-    R -e "install.packages('rgdal', dependencies=T, repos=c('https://cloud.r-project.org','http://cran.rstudio.com'))"
-    R -e "install.packages('raster', dependencies=T, repos=c('https://cloud.r-project.org','http://cran.rstudio.com'))"
+#    R -e "install.packages('rgdal', dependencies=T, repos=c('https://cloud.r-project.org','http://cran.rstudio.com'))"
+#    R -e "install.packages('raster', dependencies=T, repos=c('https://cloud.r-project.org','http://cran.rstudio.com'))"
 
     # create a few ACI-specific directories within the container
     mkdir -p /storage/home
@@ -47,8 +55,9 @@ From: debian:10
     mkdir -p /var/spool/torque
 
     mkdir -p /storage/customFiles
-    cd /storage/customFiles
-    wget https://raw.githubusercontent.com/mliskPSU/testingRepo/master/singularityTesting/testPlotScript.R
+
+#    cd /storage/customFiles
+#    wget https://raw.githubusercontent.com/mliskPSU/testingRepo/master/singularityTesting/testPlotScript.R
 
 %runscript
     exec /bin/bash "$@"
