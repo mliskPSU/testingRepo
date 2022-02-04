@@ -1,6 +1,28 @@
+##########################################################################
+##########################################################################
+## Script Name: createFireBandData.R
+## Purpose of Script: 
+##
+## Special Requirements: A fitted SOM model, Georeferenced RGB data to 
+##                      predict the SOM model onto
+##
+## Author: Matthew D. Lisk
+## Email: mdl5548@psu.edu
+## Date Created: 1/30/2022
+##
+## Last Moddified By: Author
+## Editors Email: Author
+## Date Last Edited: 2/4/2022
+##
+## Copyright (c) 2022 The Pennsylvania State University
+##
+##########################################################################
+##########################################################################
+
+library(raster)
 library(kohonen)
 
-baseDir <- "/Users/mdl5548/Documents/testFireGeoref/packageToPass"
+baseDir <- "/Users/mdl5548/Documents/GitHub/testingRepo/testFireGeoref/packageToPass"
 projFireFiles <- list.files(baseDir, pattern="_gdalTransProj.", full.names=T, recursive=T)
 #projFireFiles <- projFireFiles[-c(1,4,6)]
 projFireRasts <- lapply(projFireFiles, brick)
@@ -8,8 +30,8 @@ projFireRasts <- lapply(projFireRasts, function(rgb){names(rgb)<-c("red","green"
 
 somModelObjs <- list.files(baseDir, pattern="saveFittedSOM.RData", full.names=T, recursive=T)
 load(somModelObjs)
-plotCols <- c("orange", "#fa9fb5", "lightgreen", "#969696", "lightpink", "#969696", "#969696", "#969696", "#969696", "cyan", 
-              "#969696", "#969696", "black", "#969696", "red")
+plotCols <- c("#969696", "lightgreen", "cyan", "lightpink", "orange", "#969696", "#969696", "#969696", "black", "#fa9fb5", 
+              "#969696", "#969696", "red", "#969696", "#969696")
 
 # ptm1 <- proc.time()
 # clustRast <- lapply(projFireRasts, function(rastLyr, somMod, somCstTab){rastPts<-SpatialPoints(rastLyr)
@@ -81,23 +103,22 @@ for(rastLyr in projFireRasts){
 #plot(clustRast[[5]], col=plotCols)
 #plot(clustRast[[6]], col=plotCols)
 
-# clust1 <- clust2 <- clust3 <- clust4 <- clust5 <- clust6 <- clust7 <- clust8 <- clust9 <- clust10 <- clust11 <- clust12 <- clust13 <- clust14 <- clust15 <- clustRast2[[3]]
-# clust1[clust1!=1] <- NA  ##60-80, orange
-# clust2[clust2!=2] <- NA  ##10-20, dark pink
-# clust3[clust3!=3] <- NA  ##40-60, light green
-# clust4[clust4!=4] <- NA
-# clust5[clust5!=5] <- NA  ##5-10, light pink
+# clust1 <- clust2 <- clust3 <- clust4 <- clust5 <- clust6 <- clust7 <- clust8 <- clust9 <- clust10 <- clust11 <- clust12 <- clust13 <- clust14 <- clust15 <- somClustLyr
+# clust1[clust1!=1] <- NA  
+# clust2[clust2!=2] <- NA  ##40-60, light green
+# clust3[clust3!=3] <- NA  ##20-40, cyan
+# clust4[clust4!=4] <- NA  ##5-10, light pink
+# clust5[clust5!=5] <- NA  ##60-80, orange
 # clust6[clust6!=6] <- NA
 # clust7[clust7!=7] <- NA
 # clust8[clust8!=8] <- NA
-# clust9[clust9!=9] <- NA
-# clust10[clust10!=10] <- NA  ##20-40, cyan
+# clust9[clust9!=9] <- NA  ##Deterministic perimeter
+# clust10[clust10!=10] <- NA  ##10-20, dark pink
 # clust11[clust11!=11] <- NA
 # clust12[clust12!=12] <- NA
-# clust13[clust13!=13] <- NA  ##Deterministic perimeter
-# clust14[clust14!=14] <- NA  
-# clust15[clust15!=15] <- NA  ##80=100, red
-
+# clust13[clust13!=13] <- NA  ##80=100, red
+# clust14[clust14!=14] <- NA
+# clust15[clust15!=15] <- NA  
 
 
 
